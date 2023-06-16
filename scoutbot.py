@@ -30,7 +30,7 @@ def average_stats(team_stats, low, high):
 
 def team_dict():
     stats_dict = {}
-    with open('more_team_stats.csv') as stats_file: 
+    with open('team_stats.csv') as stats_file: 
         reader = csv.DictReader(stats_file)
         for row in reader:
             stats_dict[row["Squad"]]  = {"Ranking" : row["Ranking"], "Age" : row["Age"], "Gls": row['Gls'], "Ast" : row['Ast'], "xG" : row['xG'], "xAG" : row['xAG'], "PrgC": row["PrgC"], "PrgP" : row["PrgP"], "DefTac": row["Def 3rd"], "MidTac" : row["Mid 3rd"], "AttTac" : row["Att 3rd"], "Blocks" : row["Blocks"], "Int" : row["Int"]}
@@ -41,7 +41,7 @@ def team_dict():
 
 def player_dict():
     stats_dict = {}
-    with open('more_player_stats.csv') as stats_file: 
+    with open('player_stats.csv') as stats_file: 
         reader = csv.DictReader(stats_file)
         for row in reader:
             stats_dict[row["Player"]]  = {"Age" : (2023 - eval(row["Born"])),"Team" : row["Squad"] ,"Gls": row['Gls'], "Ast" : row['Ast'], "xG" : row['xG'], "xAG" : row['xAG'], "PrgC": row["PrgC"], "PrgP" : row["PrgP"], "Total" : 0, "DefTac": row["Def 3rd"], "MidTac" : row["Mid 3rd"], "AttTac" : row["Att 3rd"], "Blocks" : row["Blocks"], "Int" : row["Int"], "MP" : row["MP"]}
