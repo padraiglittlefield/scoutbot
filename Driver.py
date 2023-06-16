@@ -1,5 +1,5 @@
-import scoutbot.scoutbot as scoutbot
-from scoutbot.scoutbot import *
+import scoutbot as scoutbot
+from scoutbot import *
 
 
 def main():

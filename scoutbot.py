@@ -1,5 +1,6 @@
 import csv
 
+# Constants for weights
 
 MIN_MATCHES= 15
 
@@ -8,6 +9,8 @@ U24_BUFF = 1.3
 U21_BUFF = 1.5
 
 OLD_NERF = .8
+
+# Stats to be ignored by the algorithm
 
 IGNORE = ["Team","Total","MP","Age"]
 
@@ -30,7 +33,7 @@ def average_stats(team_stats, low, high):
 
 def team_dict():
     stats_dict = {}
-    with open('team_stats.csv') as stats_file: 
+    with open('scoutbot\\team_stats.csv') as stats_file: 
         reader = csv.DictReader(stats_file)
         for row in reader:
             stats_dict[row["Squad"]]  = {"Ranking" : row["Ranking"], "Age" : row["Age"], "Gls": row['Gls'], "Ast" : row['Ast'], "xG" : row['xG'], "xAG" : row['xAG'], "PrgC": row["PrgC"], "PrgP" : row["PrgP"], "DefTac": row["Def 3rd"], "MidTac" : row["Mid 3rd"], "AttTac" : row["Att 3rd"], "Blocks" : row["Blocks"], "Int" : row["Int"]}
@@ -41,13 +44,14 @@ def team_dict():
 
 def player_dict():
     stats_dict = {}
-    with open('player_stats.csv') as stats_file: 
+    with open('scoutbot\player_stats.csv') as stats_file: 
         reader = csv.DictReader(stats_file)
         for row in reader:
             stats_dict[row["Player"]]  = {"Age" : (2023 - eval(row["Born"])),"Team" : row["Squad"] ,"Gls": row['Gls'], "Ast" : row['Ast'], "xG" : row['xG'], "xAG" : row['xAG'], "PrgC": row["PrgC"], "PrgP" : row["PrgP"], "Total" : 0, "DefTac": row["Def 3rd"], "MidTac" : row["Mid 3rd"], "AttTac" : row["Att 3rd"], "Blocks" : row["Blocks"], "Int" : row["Int"], "MP" : row["MP"]}
 
     return stats_dict     
 
+# Main function for calculating recommended players. Starts the chain of functions.
 
 def player_score(player_stats, weights):
    
@@ -69,10 +73,12 @@ def player_score(player_stats, weights):
 
         the_best.append((best_player,player_stats[best_player]["Team"],player_stats[best_player]["Age"]))
 
-        print("{}: {}".format(best_player,player_stats[best_player]["Total"]))
+       # print("{}: {}".format(best_player,player_stats[best_player]["Total"]))
         del player_stats[best_player]
     return the_best
 
+
+# Used to calculate the normalized stats of all of the players
 
 def max_norm(player_stats,weights, stat):
 
@@ -83,7 +89,7 @@ def max_norm(player_stats,weights, stat):
             max_stat = float(player_stats[player][stat])
             
 
-    print("{}: {} - {}".format(stat, max_stat, max_player))
+    #print("{}: {} - {}".format(stat, max_stat, max_player))
 
     for player in player_stats:
 
@@ -107,6 +113,7 @@ def max_norm(player_stats,weights, stat):
         if player_stats[player]["Team"] in weights["Teams"]:
              player_stats[player][stat] = 0
     
+# Calculates the weights for each attribute, based on the team selected and the teams better than it.
 
 def att_weight(team, all_stats):
 
@@ -140,7 +147,7 @@ def att_weight(team, all_stats):
                 if float(all_stats[item][stat]) > max_stat:
                     max_stat = float(all_stats[item][stat])
 
-            print("{}: {}".format(stat, max_stat))
+            #print("{}: {}".format(stat, max_stat))
             ave_team[stat] = ave_team[stat]/max_stat
             team[stat] = (float(team[stat]) / max_stat)
 
@@ -150,16 +157,11 @@ def att_weight(team, all_stats):
 
             if weights[stat] > 0:
                 stat_sum += weights[stat]
-            """
-            if(weights[stat] <= 0):
-                weights[stat] += 1
-            else:
-                weights[stat] = (weights[stat] * 100) """
             
     for stat in weights:
     
         if stat not in IGNORE and not stat == "Teams":
-            print(stat)
+           # print(stat)
             if weights[stat] > 0:
                 weights[stat] = (weights[stat]/stat_sum) * 20
             else:
@@ -168,6 +170,6 @@ def att_weight(team, all_stats):
 
 
     weights["Teams"] = teams
-    print(teams)
-    print(weights)
+    #print(teams)
+    #print(weights)
     return weights
