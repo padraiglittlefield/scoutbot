@@ -1,12 +1,13 @@
-import scoutbotv2
-from scoutbotv2 import *
+import scoutbot.scoutbotv2 as scoutbotv2
+from scoutbot.scoutbotv2 import *
 
 
 def main():
 
     team_stats = team_dict()
     player_stats = player_dict()
- 
+    
+    
 
     team = str(input("Enter a Football Team: "))
 
@@ -20,7 +21,5 @@ def main():
     for i in range(10):
         print(" {}: {} - {}, {}".format(i + 1, top_rated[i][0], top_rated[i][1], top_rated[i][2] ))
     print("")
-        
-    
-    
+
 main()
